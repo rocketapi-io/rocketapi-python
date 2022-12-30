@@ -32,6 +32,24 @@ class InstagramAPI(RocketAPI):
             payload['max_id'] = max_id
         return self.request('instagram/user/get_media', payload)
 
+    def get_user_clips(self, user_id, max_id=None):
+        payload = {'id': user_id}
+        if max_id is not None:
+            payload['max_id'] = max_id
+        return self.request('instagram/user/get_clips', payload)
+
+    def get_user_guides(self, user_id, max_id=None):
+        payload = {'id': user_id}
+        if max_id is not None:
+            payload['max_id'] = max_id
+        return self.request('instagram/user/get_guides', payload)
+
+    def get_user_tags(self, user_id, count=12, max_id=None):
+        payload = {'id': user_id, 'count': count}
+        if max_id is not None:
+            payload['max_id'] = max_id
+        return self.request('instagram/user/get_tags', payload)
+
     def get_user_following(self, user_id, count=12, max_id=None):
         payload = {'id': user_id, 'count': count}
         if max_id is not None:
@@ -56,6 +74,15 @@ class InstagramAPI(RocketAPI):
     def get_user_stories(self, user_id):
         return self.get_user_stories_bulk([user_id])
 
+    def get_user_highlights(self, user_id):
+        return self.request('instagram/user/get_highlights', {'id': user_id})
+
+    def get_user_live(self, user_id):
+        return self.request('instagram/user/get_live', {'id': user_id})
+
+    def get_user_similar_accounts(self, user_id):
+        return self.request('instagram/user/get_similar_accounts', {'id': user_id})
+
     def get_media_info(self, media_id):
         return self.request('instagram/media/get_info', {'id': media_id})
 
@@ -71,8 +98,52 @@ class InstagramAPI(RocketAPI):
             payload['min_id'] = min_id
         return self.request('instagram/media/get_comments', payload)
 
+    def get_media_shortcode_by_id(self, media_id):
+        return self.request('instagram/media/get_shortcode_by_id', {'id': media_id})
+
+    def get_media_id_by_shortcode(self, shortcode):
+        return self.request('instagram/media/get_id_by_shortcode', {'shortcode': shortcode})
+
+    def get_guide_info(self, guide_id):
+        return self.request('instagram/guide/get_info', {'id': guide_id})
+
+    def get_location_info(self, location_id):
+        return self.request('instagram/location/get_info', {'id': location_id})
+
+    def get_location_media(self, location_id, page=None, max_id=None):
+        payload = {'id': location_id}
+        if page is not None:
+            payload['page'] = page
+        if max_id is not None:
+            payload['max_id'] = max_id
+        return self.request('instagram/location/get_media', payload)
+
+    def get_hashtag_info(self, name):
+        return self.request('instagram/hashtag/get_info', {'name': name})
+
+    def get_hashtag_media(self, name, page=None, max_id=None):
+        payload = {'name': name}
+        if page is not None:
+            payload['page'] = page
+        if max_id is not None:
+            payload['max_id'] = max_id
+        return self.request('instagram/hashtag/get_media', payload)
+
+    def get_highlight_stories_bulk(self, highlight_ids):
+        return self.request('instagram/highlight/get_stories', {'ids': highlight_ids})
+
+    def get_highlight_stories(self, highlight_id):
+        return self.get_highlight_stories_bulk([highlight_id])
+
     def get_comment_likes(self, comment_id, max_id=None):
         payload = {'id': comment_id}
         if max_id is not None:
             payload['max_id'] = max_id
         return self.request('instagram/comment/get_likes', payload)
+
+    def get_audio_media(self, audio_id, max_id=None):
+        payload = {'id': audio_id}
+        if max_id is not None:
+            payload['max_id'] = max_id
+        return self.request('instagram/audio/get_media', payload)
+
