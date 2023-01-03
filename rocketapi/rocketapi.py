@@ -9,5 +9,10 @@ class RocketAPI:
         self.max_timeout = 30
 
     def request(self, method, data):
-        data['_threads'] = self.threads
-        return requests.post(url=self.base_url + method, json=data, headers={'Authorization': f'Token {self.token}'}, timeout=self.max_timeout).json()
+        data["_threads"] = self.threads
+        return requests.post(
+            url=self.base_url + method,
+            json=data,
+            headers={"Authorization": f"Token {self.token}"},
+            timeout=self.max_timeout,
+        ).json()
