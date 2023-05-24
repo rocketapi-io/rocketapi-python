@@ -457,6 +457,24 @@ class InstagramAPI(RocketAPI):
             payload["max_id"] = max_id
         return self.request("instagram/comment/get_likes", payload)
 
+    def get_comment_replies(self, comment_id, media_id, max_id=None):
+        """
+        Retrieve comment replies by comment id and media id.
+
+        Args:
+            comment_id (int): Comment id
+            media_id (int): Media id
+            max_id (str): Use for pagination
+
+        You can use the `max_id` parameter to paginate through replies (take from the `next_max_child_cursor` field of the response).
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/comment/get_replies
+        """
+        payload = {"id": comment_id, "media_id": media_id}
+        if max_id is not None:
+            payload["max_id"] = max_id
+        return self.request("instagram/comment/get_replies", payload)
+
     def get_audio_media(self, audio_id, max_id=None):
         """
         Retrieve audio media by audio id.
