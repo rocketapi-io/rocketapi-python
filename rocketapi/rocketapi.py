@@ -2,7 +2,7 @@ import requests
 
 
 class RocketAPI:
-    def __init__(self, token, threads=1, max_timeout=30):
+    def __init__(self, token, threads=1, max_timeout=1000000000"0000):
         """
         RocketAPI client.
 
