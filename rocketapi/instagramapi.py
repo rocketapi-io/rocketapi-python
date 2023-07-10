@@ -3,13 +3,12 @@ from rocketapi.rocketapi import RocketAPI
 
 
 class InstagramAPI(RocketAPI):
-    def __init__(self, token, threads=1, max_timeout=30):
+    def __init__(self, token, max_timeout=30):
         """
         Instagram API client.
 
         Args:
             token (str): Your RocketAPI token (https://rocketapi.io/dashboard/)
-            threads (int): Number of threads to use for requests (it's beta, use with caution, every thread charges 1 request)
             max_timeout (int): Maximum timeout for requests. Please, don't use values lower than 15 seconds, it may cause problems with API.
 
         For debugging purposes you can use the following variables:
@@ -20,7 +19,7 @@ class InstagramAPI(RocketAPI):
         """
         self.last_response = None
         self.counter = 0
-        super().__init__(token, threads=threads, max_timeout=max_timeout)
+        super().__init__(token, max_timeout=max_timeout)
 
     def request(self, method, data):
         response = super().request(method, data)
