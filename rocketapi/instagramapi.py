@@ -88,19 +88,20 @@ class InstagramAPI(RocketAPI):
             payload["max_id"] = max_id
         return self.request("instagram/user/get_media", payload)
 
-    def get_user_clips(self, user_id, max_id=None):
+    def get_user_clips(self, user_id, count=12, max_id=None):
         """
         Retrieve user clips (videos from "Reels" section) by id.
 
         Args:
             user_id (int): User id
+            count (int): Number of media to retrieve (max: 50)
             max_id (str): Use for pagination
 
         You can use the `max_id` parameter to paginate through the media (take from the `max_id` (!) field of the response).
 
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/get_clips
         """
-        payload = {"id": user_id}
+        payload = {"id": user_id, "count": count}
         if max_id is not None:
             payload["max_id"] = max_id
         return self.request("instagram/user/get_clips", payload)
