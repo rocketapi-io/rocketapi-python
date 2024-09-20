@@ -34,12 +34,20 @@ class InstagramAPI(RocketAPI):
             elif response["response"]["status_code"] == 404:
                 raise NotFoundException("Instagram resource not found")
             else:
-                raise BadResponseException("Bad response from Instagram")
-        raise BadResponseException("Bad response from RocketAPI")
+                raise BadResponseException(
+                    f"Bad response from Instagram ({method}: {response['response']['status_code']})"
+                )
+        raise BadResponseException(f"Bad response from RocketAPI ({method})")
 
     def search(self, query):
         """
         Search for a specific user, hashtag or place.
+
+        As of September 2024, we no longer recommend using this method, as it now only returns a maximum of 5 users and leaves the places and hashtags arrays empty. Instead, please use the separate methods:
+        - `search_users`
+        - `search_hashtags`
+        - `search_locations`
+        - `search_audios`
 
         Args:
             query (str): The search query
@@ -76,7 +84,7 @@ class InstagramAPI(RocketAPI):
 
         Args:
             user_id (int): User id
-            count (int): Number of media to retrieve (max: 50)
+            count (int): Number of media to retrieve (max: 12)
             max_id (str): Use for pagination
 
         You can use the `max_id` parameter to paginate through the media (take from the `next_max_id` field of the response).
@@ -179,7 +187,7 @@ class InstagramAPI(RocketAPI):
 
         Args:
             user_id (int): User id
-            count (int): Number of users to return (max: 100)
+            count (int): Number of users to return (max: 50)
             max_id (str): Use for pagination
 
         You can use the `max_id` parameter to paginate through followers (take from the `next_max_id` field of the response).
@@ -287,14 +295,14 @@ class InstagramAPI(RocketAPI):
 
     def get_media_likes(self, shortcode, count=12, max_id=None):
         """
-        Retrieve media likes by media shortcode.
+        Retrieve up to 1000 media likes by media shortcode.
 
         Args:
             shortcode (str): Media shortcode
-            count (int): Number of likers to return (max: 50)
-            max_id (str): Use for pagination
+            count (int): Not supported right now
+            max_id (str): Not supported right now
 
-        You can use the `max_id` parameter to paginate through likers (take from the `next_max_id` field of the response).
+        Pagination is not supported for this endpoint.
 
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/get_likes
         """
@@ -505,3 +513,47 @@ class InstagramAPI(RocketAPI):
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/get_about
         """
         return self.request("instagram/user/get_about", {"id": user_id})
+
+    def search_users(self, query):
+        """
+        Search for a specific user (max 50 results)
+
+        Args:
+            query (str): The search query
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/search
+        """
+        return self.request("instagram/user/search", {"query": query})
+
+    def search_hashtags(self, query):
+        """
+        Search for a specific hashtag (max 20 results)
+
+        Args:
+            query (str): The search query
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/hashtag/search
+        """
+        return self.request("instagram/hashtag/search", {"query": query})
+
+    def search_locations(self, query):
+        """
+        Search for a specific location (max 20 results)
+
+        Args:
+            query (str): The search query
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/location/search
+        """
+        return self.request("instagram/location/search", {"query": query})
+
+    def search_audios(self, query):
+        """
+        Search for a specific audio (max 10 results)
+
+        Args:
+            query (str): The search query
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/audio/search
+        """
+        return self.request("instagram/audio/search", {"query": query})
