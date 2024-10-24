@@ -11,6 +11,7 @@ class RocketAPI:
         For more information, see documentation: https://docs.rocketapi.io/api/
         """
         self.base_url = "https://v1.rocketapi.io/"
+        self.version = "1.0.8"
         self.token = token
         self.max_timeout = max_timeout
 
@@ -18,6 +19,9 @@ class RocketAPI:
         return requests.post(
             url=self.base_url + method,
             json=data,
-            headers={"Authorization": f"Token {self.token}"},
+            headers={
+                "Authorization": f"Token {self.token}",
+                "User-Agent": f"RocketAPI Python SDK/{self.version}",
+            },
             timeout=self.max_timeout,
         ).json()

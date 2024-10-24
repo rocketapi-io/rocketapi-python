@@ -48,6 +48,7 @@ class InstagramAPI(RocketAPI):
         - `search_hashtags`
         - `search_locations`
         - `search_audios`
+        - `search_clips`
 
         Args:
             query (str): The search query
@@ -102,7 +103,7 @@ class InstagramAPI(RocketAPI):
 
         Args:
             user_id (int): User id
-            count (int): Number of media to retrieve (max: 50)
+            count (int): Number of media to retrieve (max: 12)
             max_id (str): Use for pagination
 
         You can use the `max_id` parameter to paginate through the media (take from the `max_id` (!) field of the response).
@@ -375,7 +376,7 @@ class InstagramAPI(RocketAPI):
         """
         return self.request("instagram/location/get_info", {"id": location_id})
 
-    def get_location_media(self, location_id, page=None, max_id=None):
+    def get_location_media(self, location_id, page=None, max_id=None, tab=None):
         """
         Retrieve location media by location id.
 
@@ -383,6 +384,7 @@ class InstagramAPI(RocketAPI):
             location_id (int): Location id
             page (int): Page number
             max_id (str): Use for pagination
+            tab (str): Tab name: recent, ranked (default: recent)
 
         In order to use pagination, you need to use both the `max_id` and `page` parameters. You can obtain these values from the response's `next_page` and `next_max_id` fields.
 
@@ -393,6 +395,8 @@ class InstagramAPI(RocketAPI):
             payload["page"] = page
         if max_id is not None:
             payload["max_id"] = max_id
+        if tab is not None:
+            payload["tab"] = tab
         return self.request("instagram/location/get_media", payload)
 
     def get_hashtag_info(self, name):
@@ -500,6 +504,23 @@ class InstagramAPI(RocketAPI):
             payload["max_id"] = max_id
         return self.request("instagram/audio/get_media", payload)
 
+    def get_audio_media_by_canonical_id(self, audio_canonical_id, max_id=None):
+        """
+        Retrieve audio media by audio canonical id.
+
+        Args:
+            audio_canonical_id (int): Audio canonical id
+            max_id (str): Use for pagination
+
+        You can use the `max_id` parameter to paginate through media (take from the `next_max_id` field of the response).
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/audio/get_media_by_canonical_id
+        """
+        payload = {"id": audio_canonical_id}
+        if max_id is not None:
+            payload["max_id"] = max_id
+        return self.request("instagram/audio/get_media_by_canonical_id", payload)
+
     def get_user_about(self, user_id):
         """
         Obtain user details from «About this Account» section.
@@ -557,3 +578,14 @@ class InstagramAPI(RocketAPI):
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/audio/search
         """
         return self.request("instagram/audio/search", {"query": query})
+
+    def search_clips(self, query):
+        """
+        Search for a specific clip with a caption that includes the query (max 12 results)
+
+        Args:
+            query (str): The search query
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/search_clips
+        """
+        return self.request("instagram/media/search_clips", {"query": query})
