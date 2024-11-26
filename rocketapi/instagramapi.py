@@ -312,6 +312,19 @@ class InstagramAPI(RocketAPI):
             payload["max_id"] = max_id
         return self.request("instagram/media/get_likes", payload)
 
+    def get_media_likes_by_id(self, media_id):
+        """
+        Retrieve up to 1000 media likes by media id.
+
+        Args:
+            media_id (int): Media id
+
+        Pagination is not supported for this endpoint.
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/get_likes_by_id
+        """
+        return self.request("instagram/media/get_likes_by_id", {"id": media_id})
+
     def get_media_comments(self, media_id, can_support_threading=True, min_id=None):
         """
         Retrieve media comments by media id.
@@ -521,12 +534,20 @@ class InstagramAPI(RocketAPI):
             payload["max_id"] = max_id
         return self.request("instagram/audio/get_media_by_canonical_id", payload)
 
+    def get_live_info(self, broadcast_id):
+        """
+        Retrieve live information by broadcast id.
+
+        Args:
+            broadcast_id (int): Broadcast id
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/live/get_info
+        """
+        return self.request("instagram/live/get_info", {"id": broadcast_id})
+
     def get_user_about(self, user_id):
         """
         Obtain user details from «About this Account» section.
-
-        ⭐️ This method is exclusively available to our Enterprise+ clients.
-        If you wish to enable it for your account, please get in touch with our support team: https://t.me/rocketapi
 
         Args:
             user_id (int): User id
