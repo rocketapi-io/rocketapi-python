@@ -367,6 +367,17 @@ class InstagramAPI(RocketAPI):
             "instagram/media/get_id_by_shortcode", {"shortcode": shortcode}
         )
 
+    def get_media_id_by_share(self, share):
+        """
+        Get media id by share code (for links like https://www.instagram.com/share/XXXxx356, where XXXxx356 is the share code).
+
+        Args:
+            share (str): Share code
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/get_id_by_share
+        """
+        return self.request("instagram/media/get_id_by_share", {"share": share})
+
     def get_guide_info(self, guide_id):
         """
         Retrieve guide information by guide id.
