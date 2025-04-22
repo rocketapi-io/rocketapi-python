@@ -26,6 +26,9 @@ class InstagramAPI(RocketAPI):
         self.last_response = response
         self.counter += 1
         if response["status"] == "done":
+            if method in ["instagram/media/get_shortcode_by_id", "instagram/media/get_id_by_shortcode"]:
+                return response
+            
             if (
                 response["response"]["status_code"] == 200
                 and response["response"]["content_type"] == "application/json"
