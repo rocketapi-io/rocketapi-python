@@ -57,16 +57,30 @@ class InstagramAPI(RocketAPI):
         """
         return self.request("instagram/search", {"query": query})
 
+    def get_web_profile_info(self, username):
+        """
+        Retrieve user web profile information by username.
+
+        Args:
+            username (str): Username
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/get_web_profile_info
+        """
+        return self.request(
+            "instagram/user/get_web_profile_info", {"username": username}
+        )
+
     def get_user_info(self, username):
         """
         Retrieve user information by username.
+        This is an alias for get_web_profile_info.
 
         Args:
             username (str): Username
 
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/get_info
         """
-        return self.request("instagram/user/get_info", {"username": username})
+        return self.get_web_profile_info(username)
 
     def get_user_info_by_id(self, user_id):
         """
@@ -96,6 +110,24 @@ class InstagramAPI(RocketAPI):
         if max_id is not None:
             payload["max_id"] = max_id
         return self.request("instagram/user/get_media", payload)
+
+    def get_user_media_by_username(self, username, count=12, max_id=None):
+        """
+        Retrieve user media by username.
+
+        Args:
+            username (str): Username
+            count (int): Number of media to retrieve (max: 12)
+            max_id (str): Use for pagination
+
+        You can use the `max_id` parameter to paginate through the media (take from the `next_max_id` field of the response).
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/get_media_by_username
+        """
+        payload = {"username": username, "count": count}
+        if max_id is not None:
+            payload["max_id"] = max_id
+        return self.request("instagram/user/get_media_by_username", payload)
 
     def get_user_clips(self, user_id, count=12, max_id=None):
         """
@@ -294,23 +326,38 @@ class InstagramAPI(RocketAPI):
             "instagram/media/get_info_by_shortcode", {"shortcode": shortcode}
         )
 
-    def get_media_likes(self, shortcode, count=12, max_id=None):
+    def get_media_likes_by_shortcode(self, shortcode):
         """
         Retrieve up to 1000 media likes by media shortcode.
 
         Args:
             shortcode (str): Media shortcode
-            count (int): Not supported right now
-            max_id (str): Not supported right now
 
         Pagination is not supported for this endpoint.
 
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/get_likes
         """
-        payload = {"shortcode": shortcode, "count": count}
-        if max_id is not None:
-            payload["max_id"] = max_id
+        payload = {"shortcode": shortcode}
         return self.request("instagram/media/get_likes", payload)
+
+    def get_media_likes(self, shortcode, count=12, max_id=None):
+        """
+        Retrieve up to 1000 media likes by media shortcode.
+        This is an alias for get_media_likes_by_shortcode.
+
+        Note: The parameters count and max_id are kept for backward compatibility but are no longer supported.
+
+        Args:
+            shortcode (str): Media shortcode
+            count (int): DEPRECATED - No longer supported
+            max_id (str): DEPRECATED - No longer supported
+
+        Pagination is not supported for this endpoint.
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/get_likes
+        """
+        # Ignoring count and max_id parameters as they're no longer supported
+        return self.get_media_likes_by_shortcode(shortcode)
 
     def get_media_likes_by_id(self, media_id):
         """
@@ -434,7 +481,7 @@ class InstagramAPI(RocketAPI):
         """
         return self.request("instagram/hashtag/get_info", {"name": name})
 
-    def get_hashtag_media(self, name, page=None, max_id=None):
+    def get_hashtag_media(self, name, page=None, max_id=None, tab=None):
         """
         Retrieve hashtag media by hashtag name.
 
@@ -442,6 +489,7 @@ class InstagramAPI(RocketAPI):
             name (str): Hashtag name
             page (int): Page number
             max_id (str): Use for pagination
+            tab (str): Tab name: recent, top, or clips (default: recent)
 
         In order to use pagination, you need to use both the `max_id` and `page` parameters. You can obtain these values from the response's `next_page` and `next_max_id` fields.
 
@@ -452,6 +500,8 @@ class InstagramAPI(RocketAPI):
             payload["page"] = page
         if max_id is not None:
             payload["max_id"] = max_id
+        if tab is not None:
+            payload["tab"] = tab
         return self.request("instagram/hashtag/get_media", payload)
 
     def get_highlight_stories_bulk(self, highlight_ids):
@@ -611,13 +661,19 @@ class InstagramAPI(RocketAPI):
         """
         return self.request("instagram/audio/search", {"query": query})
 
-    def search_clips(self, query):
+    def search_clips(self, query, max_id=None):
         """
         Search for a specific clip with a caption that includes the query (max 12 results)
 
         Args:
             query (str): The search query
+            max_id (str): Use for pagination
+
+        You can use the max_id parameter to paginate through following (take from the reels_max_id field of the response).
 
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/search_clips
         """
-        return self.request("instagram/media/search_clips", {"query": query})
+        payload = {"query": query}
+        if max_id is not None:
+            payload["max_id"] = max_id
+        return self.request("instagram/media/search_clips", payload)
