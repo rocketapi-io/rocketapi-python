@@ -85,6 +85,21 @@ class InstagramAPI(RocketAPI):
         """
         return self.get_web_profile_info(username)
 
+    def get_user_info_by_username(self, username):
+        """
+        Retrieve user information by username.
+
+        Please note that the responses from `get_web_profile_info` and `get_user_info_by_username` methods are different.
+
+        Args:
+            username (str): Username
+
+        For more information, see documentation: https://docs.rocketapi.io/api/instagram/user/get_info_by_username
+        """
+        return self.request(
+            "instagram/user/get_info_by_username", {"username": username}
+        )
+
     def get_user_info_by_id(self, user_id):
         """
         Retrieve user information by id.
