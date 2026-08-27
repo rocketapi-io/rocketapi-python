@@ -19,9 +19,12 @@ class InstagramAPI(RocketAPI):
         """
         self.last_response = None
         self.counter = 0
+        self.version = None
         super().__init__(token, max_timeout=max_timeout)
 
     def request(self, method, data):
+        if isinstance(self.version, str):
+            data = {**data, "version": self.version}
         response = super().request(method, data)
         self.last_response = response
         self.counter += 1
