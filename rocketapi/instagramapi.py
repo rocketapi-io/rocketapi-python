@@ -31,7 +31,7 @@ class InstagramAPI(RocketAPI):
         if response["status"] == "done":
             if method in ["instagram/media/get_shortcode_by_id", "instagram/media/get_id_by_shortcode"]:
                 return response
-            
+
             if (
                 response["response"]["status_code"] == 200
                 and response["response"]["content_type"] == "application/json"
@@ -393,7 +393,9 @@ class InstagramAPI(RocketAPI):
         """
         return self.request("instagram/media/get_likes_by_id", {"id": media_id})
 
-    def get_media_comments(self, media_id, can_support_threading=True, min_id=None):
+    def get_media_comments(
+        self, media_id, can_support_threading=True, min_id=None, order=None
+    ):
         """
         Retrieve media comments by media id.
 
@@ -401,14 +403,22 @@ class InstagramAPI(RocketAPI):
             media_id (int): Media id
             can_support_threading (bool): Set `False` if you want chronological order
             min_id (str): Use for pagination
+            order (int): Comments order: 0 - popular (default), 1 - most recent, 2 - verified. Requires `can_support_threading` to be `True`
 
         You can use the `min_id` parameter to paginate through comments (take from the `next_min_id` field of the response).
 
         For more information, see documentation: https://docs.rocketapi.io/api/instagram/media/get_comments
         """
+        if order is not None:
+            if not can_support_threading:
+                raise ValueError("order requires can_support_threading to be True")
+            if order not in (0, 1, 2):
+                raise ValueError("order must be 0, 1 or 2")
         payload = {"id": media_id, "can_support_threading": can_support_threading}
         if min_id is not None:
             payload["min_id"] = min_id
+        if order is not None:
+            payload["order"] = order
         return self.request("instagram/media/get_comments", payload)
 
     def get_media_shortcode_by_id(self, media_id):

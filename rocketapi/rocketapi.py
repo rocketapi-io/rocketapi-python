@@ -11,7 +11,7 @@ class RocketAPI:
         For more information, see documentation: https://docs.rocketapi.io/api/
         """
         self.base_url = "https://v1.rocketapi.io/"
-        self.sdk_version = "1.0.14"
+        self.sdk_version = "1.0.15"
         self.token = token
         self.max_timeout = max_timeout
 
